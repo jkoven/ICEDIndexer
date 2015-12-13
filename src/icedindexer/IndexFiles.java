@@ -523,6 +523,10 @@ public class IndexFiles {
 //                        System.out.println(key + " " + entList.get(key));
                         doc.add(new Field(key, entList.get(key), storeAll));
                     }
+                    HashMap<String, String> taggedWords = tagger.ExtractPos(content);
+                    for (String key : taggedWords.keySet()) {
+                        doc.add(new Field(key, taggedWords.get(key), storeAll));
+                    }
 //          doc.add(new TextField("contents", new BufferedReader(new InputStreamReader(fis, "UTF-8"))));
 
                     if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
@@ -638,10 +642,8 @@ public class IndexFiles {
                                 date = cal.getTime();
                             }
                             doc.add(new LongField(h.getName(), date.getTime(), Field.Store.YES));
-                        } else {
-                            if (h.getName().equalsIgnoreCase("Subject")) {
-                                doc.add(new Field("Subject", getHashes(h.getValue().toString()), storeAll));
-                            }
+                        } else if (h.getName().equalsIgnoreCase("Subject")) {
+                            doc.add(new Field("Subject", getHashes(h.getValue().toString()), storeAll));
                         }
                     }
                     String content = "";
@@ -842,8 +844,8 @@ public class IndexFiles {
                         BytesRef user;
                         userI = users.iterator(userI);
                         while ((user = userI.next()) != null) {
-                            if (user.utf8ToString().contains("@") || 
-                                    user.utf8ToString().toLowerCase().contains("guerrero")) {
+                            if (user.utf8ToString().contains("@")
+                                    || user.utf8ToString().toLowerCase().contains("guerrero")) {
                                 allUsers.add(user.utf8ToString());
                                 eUsers.add(user.utf8ToString());
                             }
