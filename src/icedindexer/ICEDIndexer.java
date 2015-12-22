@@ -5,13 +5,12 @@
  */
 package icedindexer;
 
-
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -51,7 +50,14 @@ public class ICEDIndexer {
     public static void main(String[] args) throws Exception {
         // TODO code application logic here
         try {
-            BufferedReader credReader = new BufferedReader(new FileReader(new File("./datafiles/basedirectory.txt")));
+            System.setOut(new PrintStream(new File("output-file.txt")));
+            System.setErr(new PrintStream(new File("error-file.txt")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        File sourceFile = new File(ICEDIndexer.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        try {
+            BufferedReader credReader = new BufferedReader(new FileReader(new File(sourceFile.getParent(),"datafiles/basedirectory.txt")));
             baseDir = new File(passwordDecode(credReader.readLine().trim()));
             credReader.close();
         } catch (IOException ex) {
@@ -70,7 +76,7 @@ public class ICEDIndexer {
         }
         baseDir = fc.getSelectedFile();
         try {
-            FileWriter credOut = new FileWriter(new File("./datafiles/basedirectory.txt"));
+            FileWriter credOut = new FileWriter(new File(sourceFile.getParent(),"datafiles/basedirectory.txt"));
             credOut.write(passwordEncode(baseDir.getParent()) + "\n");
             credOut.close();
         } catch (IOException e) {
@@ -94,8 +100,9 @@ public class ICEDIndexer {
         IndexFiles.indexMain(indexArgs, false);
 
 //        IndexSearch.search(bindexPath);
-        System.exit(1);
+        System.exit(0);
     }
+
     private static String passwordEncode(String password) {
         try {
             // only the first 8 Bytes of the constructor argument are used
@@ -149,5 +156,5 @@ public class ICEDIndexer {
         }
         return (null);
     }
-    
+
 }

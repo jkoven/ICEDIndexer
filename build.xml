@@ -70,10 +70,30 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <taskdef name="bundleapp"
+             classname="com.oracle.appbundler.AppBundlerTask"   
+             classpath="lib/appbundler-1.0.jar" />
     <target name="-post-jar"> 
         <mkdir dir="${dist.dir}/datafiles"/>
         <copy todir="${dist.dir}/datafiles">
             <fileset dir="datafiles"/>
         </copy> 
+        <bundleapp 
+            name="${application.title}"
+            displayname="${application.title}"
+            identifier="edu.nyu.bertinivis.iced.icedindexer"
+            outputdirectory="${dist.dir}"
+            mainclassname="${main.class}">
+            <classpath file="${dist.jar}" />
+            <option value="-Dapple.laf.useScreenMenuBar=true"/>
+            <option value="-Xmx8g"/>
+        </bundleapp>
+        <copy todir="${dist.dir}/ICEDIndexer.app/Contents/Java/datafiles">
+            <fileset dir="datafiles"/>
+        </copy> 
+        <copy todir="${dist.dir}/ICEDIndexer.app/Contents/Java/lib">
+            <fileset dir="${dist.dir}/lib"/>
+        </copy> 
     </target> 
+    <!-- Define the appbundler task -->
 </project>

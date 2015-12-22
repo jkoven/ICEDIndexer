@@ -22,7 +22,7 @@ public class EntityExtractor {
 
     public EntityExtractor(String baseDir) {
         classifier
-                = CRFClassifier.getClassifierNoExceptions("datafiles/english.muc.7class.distsim.crf.ser.gz");
+                = CRFClassifier.getClassifierNoExceptions(baseDir + "/datafiles/english.muc.7class.distsim.crf.ser.gz");
     }
 
     public HashMap<String, String> extract(String text) {

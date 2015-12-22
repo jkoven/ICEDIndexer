@@ -30,6 +30,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.security.MessageDigest;
@@ -120,8 +121,10 @@ public class IndexFiles {
         String docsPath = null;
         boolean create = true;
         boolean noDownload = false;
-        EntityExtractor ee = new EntityExtractor("datafiles");
-        PosExtractor tagger = new PosExtractor("datafiles/models");
+        File sourceFile = new File(IndexFiles.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        EntityExtractor ee = new EntityExtractor(sourceFile.getParent());
+        PosExtractor tagger = new PosExtractor(sourceFile.getParent() + "/datafiles/models");
+        System.out.println("Got this far");
 
         for (int i = 0; i < args.length; i++) {
             if ("-index".equals(args[i])) {
@@ -164,7 +167,7 @@ public class IndexFiles {
         Date start = new Date();
         try {
             stopWords = new CharArraySet(Version.LUCENE_40, 1000, true);
-            File file = new File("datafiles/stopwords_en.txt");
+            File file = new File(sourceFile.getParent() + "/datafiles/stopwords_en.txt");
             BufferedReader inFile = new BufferedReader(new FileReader(file));
             String word;
             while ((word = inFile.readLine()) != null) {
